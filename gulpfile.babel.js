@@ -1,53 +1,79 @@
-import 'babel-core/register';
-import gulp from 'gulp';
-import sass from 'gulp-sass';
-import autoprefixer from 'gulp-autoprefixer';
-import minimise from 'gulp-cssnano';
-import concat from 'gulp-concat';
-import plumber from 'gulp-plumber';
-import sequence from 'run-sequence';
-import rename from 'gulp-rename';
+import "babel-core/register";
+import gulp from "gulp";
+import sass from "gulp-sass";
+import autoprefixer from "gulp-autoprefixer";
+import minimise from "gulp-cssnano";
+import concat from "gulp-concat";
+import plumber from "gulp-plumber";
+import sequence from "run-sequence";
 
-import webpack from 'webpack';
-import webpackStream from 'webpack-stream';
-import { config as webpackConfigSrc } from './webpack.config.js';
+import webpack from "webpack";
+import webpackStream from "webpack-stream";
 
-let jsSource = './src/js/*.js';
-let jsTestSource = './src/js/tests.js';
-let jsDest = './build/js';
+let bootstrap4Source = "./src/scss/bootstrap-custom.scss";
+let sassSource = "./src/scss/app.scss";
+let stylesDest = "./build/css";
+let outputtedCSSFileName = "skuna-app-styles.min.css";
 
-let htmlSource = './src/*.html';
-let htmlDest = './build';
+let jsSource = "./src/js/app.js";
+let jsDest = "./build/js";
+let webpackConfigSrc = "./webpack.config.js";
 
-gulp.task('js', () => {
-    let entry = {};
-    entry['text'] = 'js/app.js';
-    let config = Object.assign({}, webpackConfigSrc, { entry });
-    return gulp.src(`./src/js/app.js`)
+let htmlSource = "./src/*.html";
+let htmlDest = "./build";
+
+let fontSource = "./src/fonts/**/*";
+let fontDest = "./build/fonts";
+
+gulp.task("js", () => {
+    return gulp.src(jsSource)
         .pipe(plumber())
-        .pipe(webpackStream(config))
-        .pipe(gulp.dest(`${jsDest}`));
+        .pipe(webpackStream(require(webpackConfigSrc)))
+        .pipe(gulp.dest(jsDest));
 });
 
-gulp.task('js-tests', () => {
-    let entry = {};
-    entry['tests'] = 'js/tests.js';
-    let config = Object.assign({}, webpackConfigSrc, { entry });
-    return gulp.src(`${jsTestSource}`)
+gulp.task("js:prod", () => {
+    let prodConfig = Object.assign({}, require(webpackConfigSrc), {
+        watch : false
+    });
+    prodConfig.plugins.push(new webpack.optimize.UglifyJsPlugin());
+    prodConfig.plugins.push(new webpack.DefinePlugin({
+        'process.env.NODE_ENV':  '"production"'
+    }));
+
+    return gulp.src(jsSource)
         .pipe(plumber())
-        .pipe(webpackStream(config))
-        .pipe(gulp.dest(`${jsDest}`));
+        .pipe(webpackStream(prodConfig))
+        .pipe(gulp.dest(jsDest));
 });
 
-gulp.task('html', () => {
+gulp.task("styles", () => {
+    return gulp.src([bootstrap4Source, sassSource])
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(minimise())
+        .pipe(concat(outputtedCSSFileName))
+        .pipe(gulp.dest(stylesDest));
+});
+
+gulp.task("html", () => {
     return gulp.src(htmlSource)
         .pipe(gulp.dest(htmlDest));
 });
 
-gulp.task('watch', function() {
-    gulp.watch(htmlSource, ['html']);
-    gulp.watch(jsSource, ['js']);
-    gulp.watch(jsTestSource, ['js-tests']);
+gulp.task("fonts", () => {
+    return gulp.src(fontSource)
+        .pipe(gulp.dest(fontDest));
 });
 
-gulp.task('default', ['html', 'js', 'js-tests', 'watch']);
+gulp.task("build:production", () => {
+    return sequence("html", "styles", "js:prod");
+});
+
+gulp.task("watch", function() {
+    gulp.watch([bootstrap4Source, sassSource], ["styles"]);
+    gulp.watch(htmlSource, ["html"]);
+    gulp.watch(jsSource, ["js"]);
+});
+
+gulp.task("default", ["html", "styles", "js", "fonts", "watch"]);

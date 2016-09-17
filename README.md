@@ -1,2 +1,0 @@
-# skuna
-Skuna.co.uk

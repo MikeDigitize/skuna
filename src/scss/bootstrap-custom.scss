@@ -1,0 +1,18 @@
+/*
+ *    My Minimal Bootstrap build!
+ */
+
+// Core variables and mixins
+@import "bootstrap4/variables";
+@import "bootstrap4/mixins";
+
+// Reset and dependencies
+@import "bootstrap4/normalize";
+@import "bootstrap4/print";
+
+// Core CSS
+@import "bootstrap4/reboot";
+@import "bootstrap4/type";
+@import "bootstrap4/images";
+@import "bootstrap4/grid";
+@import "bootstrap4/buttons";
