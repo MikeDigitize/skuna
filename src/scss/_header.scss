@@ -1,0 +1,102 @@
+@import 'variables';
+
+.top-header {
+
+	background-color: #000066;
+
+	.header-inner {
+
+		background: url(../images/skuna-header-background.png) no-repeat center center;
+		background-size: cover;
+		height: 290px;
+		padding: 25px;
+
+		.skuna-logo {
+			width: 100%;
+			max-width: 275px;
+			display: block;
+			margin: auto;
+		}
+
+		.nav-link {
+
+			display: block;
+			&:hover {
+				text-decoration: none !important;
+			}
+
+			.nav-item {
+
+				border-radius: 50%;
+				border: 4px solid #fff;
+				width: 120px;
+		    	height: 120px;
+		    	margin: auto;
+		    	overflow: hidden;
+		    	margin-top: 60px;
+
+				&.nav-lager {
+					background-image: url(../images/lager-btn.png);
+					background-size: cover;
+				}
+
+				&.nav-cider {
+					background-image: url(../images/cider-btn.png);
+					background-size: cover;
+				}
+
+				&.nav-merchandise {
+					background-image: url(../images/pos-btn.png);
+					background-size: cover;
+				}
+
+				&.nav-contact {
+					background-image: url(../images/contact-btn.png);
+					background-size: cover;
+				}
+
+				span {
+					border-radius: 50%;
+					width: 120px;
+					height: 120px;
+					display: block;
+					text-indent: -5000px;
+					line-height: 100px;
+					font-family: $text-font, sans-serif;
+					font-size: 30px;
+					text-shadow: 0px 2px 8px #49789f;
+					color: #fff;
+					text-align: center;
+					transition: all 0.5s;
+					-webkit-transition: all 0.5s;
+					-moz-transition: all 0.5s;
+					-o-transition: all 0.5s;
+					overflow: hidden;
+					position: relative;
+					top: -8px;
+	    			left: -8px;
+
+					&:hover {
+						background: rgba(73,120,159,0.5);
+						text-indent: 0px;
+						overflow: hidden;
+						left: -5px;
+	    				padding-top: 10px;
+					}
+
+				}
+
+			}
+
+			h2 {
+				text-align: center;
+				margin-top: 10px;
+				color: #fff;
+				font-family: Myriad Pro;
+			}
+
+		}	
+
+	}
+
+}
