@@ -2,3 +2,12 @@ $header-font: 'Perpetua-Bold', sans-serif;
 $text-font: 'Perpetua', sans-serif;
 $header-color: #333;
 $text-color: #222;
+$orange : #ffcc00;
+
+@mixin back-gradient() {
+	background: #231f20; /* Old browsers */
+	background: -moz-linear-gradient(top, #231f20 0%, #241f57 49%, #010103 100%);
+	background: -webkit-linear-gradient(top, #231f20 0%,#241f57 49%,#010103 100%); 
+	background: linear-gradient(to bottom, #231f20 0%,#241f57 49%,#010103 100%); 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#231f20', endColorstr='#010103',GradientType=0 );
+}

@@ -1,17 +1,17 @@
 import "babel-core/register";
-import path from "path";
+import { resolve } from "path";
 
 module.exports = {
-    context : path.resolve("src"),
+    context : resolve("src"),
     entry : {
         app: "js/app.js"
     },
     resolve: {
-        root: path.resolve(__dirname + "/src"),
+        root: resolve(__dirname + "/src"),
         extensions: ["", ".js", ".jsx", ".json", ".scss"]
     },
     output : {
-        path: path.resolve(__dirname + "/build"),
+        path: resolve(__dirname + "/build"),
         publicPath : "/build",
         filename: "[name].js"
     },
