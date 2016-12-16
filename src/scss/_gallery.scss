@@ -1,0 +1,21 @@
+.gallery {
+	margin: 20px auto;
+	&:after {
+		content : "";
+		display: table;
+		clear: both;
+	}
+}
+.gallery-small {
+	max-width: 1000px;
+    margin: auto;
+	.img-small {
+		max-width: 75%;
+		display: block;
+		margin: auto;
+		transition: all 0.4s ease-out;
+	}
+	.col-xs-6 {
+		margin-top: 20px;
+	}
+}

@@ -1,13 +1,36 @@
 $header-font: 'Perpetua-Bold', sans-serif;
 $text-font: 'Perpetua', sans-serif;
-$header-color: #333;
-$text-color: #222;
+$header-color: #fff;
+$text-color: #fff;
+$ph-color: #999;
 $orange : #ffcc00;
 
 @mixin back-gradient() {
-	background: #231f20; /* Old browsers */
-	background: -moz-linear-gradient(top, #231f20 0%, #241f57 49%, #010103 100%);
-	background: -webkit-linear-gradient(top, #231f20 0%,#241f57 49%,#010103 100%); 
-	background: linear-gradient(to bottom, #231f20 0%,#241f57 49%,#010103 100%); 
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#231f20', endColorstr='#010103',GradientType=0 );
+	background: #231f20;
+    background: -webkit-linear-gradient(top,#231f20,#241f57 49%,#010103);
+    background: linear-gradient(180deg,#231f20 0,#241f59 49%,#010103);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#231f20',endColorstr='#010103',GradientType=0);
+}
+
+@mixin placeholder() {
+	input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	  color: $ph-color;
+	  font-style: italic;
+	  font-size: 1.2rem;
+	}
+	input::-moz-placeholder { /* Firefox 19+ */
+	  color: $ph-color;
+	  font-style: italic;
+	  font-size: 1.2rem;
+	}
+	input:-ms-input-placeholder { /* IE 10+ */
+	  color: $ph-color;
+	  font-style: italic;
+	  font-size: 1.2rem;
+	}
+	input:-moz-placeholder { /* Firefox 18- */
+	  color: $ph-color;
+	  font-style: italic;
+	  font-size: 1.2rem;
+	}
 }

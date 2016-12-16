@@ -46,7 +46,64 @@
 
 	'use strict';
 
-	console.log('js is in!!!');
+	var debounce = function debounce(func, wait, immediate) {
+		var timeout;
+		return function () {
+			var context = this,
+			    args = arguments;
+			var later = function later() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			};
+			var callNow = immediate && !timeout;
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+			if (callNow) func.apply(context, args);
+		};
+	};
+
+	var isMobile = window.innerWidth < 650;
+	var inputs = [].slice.call(document.querySelectorAll('#skuna-contact-form input'));
+	var placeholders = [{
+		type: 'text',
+		large: 'A name so we know who to ask for you when we contact you',
+		small: 'Your name here please'
+	}, {
+		type: 'email',
+		large: 'An email address we can send Skuna details to',
+		small: 'Your email here please'
+	}, {
+		type: 'number',
+		large: 'A contact number we can call you on',
+		small: 'Your number here please'
+	}];
+
+	function replacePlaceholders(mobile) {
+		inputs.forEach(function (input) {
+			var text = placeholders.filter(function (ph) {
+				return input.type === ph.type;
+			})[0][mobile ? 'small' : 'large'];
+			input.placeholder = text;
+		});
+	}
+
+	window.addEventListener('resize', debounce(function () {
+		if (window.innerWidth < 650) {
+			if (!isMobile) {
+				isMobile = true;
+				replacePlaceholders(isMobile);
+			}
+		} else {
+			if (isMobile) {
+				isMobile = false;
+				replacePlaceholders(isMobile);
+			}
+		}
+	}, 100));
+
+	document.addEventListener('DOMContentLoaded', function () {
+		replacePlaceholders(isMobile);
+	});
 
 /***/ }
 /******/ ]);

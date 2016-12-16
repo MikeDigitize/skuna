@@ -1,9 +1,16 @@
 @import 'fonts';
 @import 'variables';
 
+.container-fluid {
+	@include back-gradient();
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: $text-font;
-  color : $header-color;
+  color: $header-color;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 4px;
 }
 
 h2 {
@@ -14,4 +21,12 @@ p {
   font-family: $text-font;
   font-size: 20px;
   color: $text-color;
+}
+
+.hide {
+	display: none;
+}
+
+.show {
+	display: block;
 }
