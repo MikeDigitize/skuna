@@ -63,19 +63,26 @@
 	};
 
 	var isMobile = window.innerWidth < 650;
-	var inputs = [].slice.call(document.querySelectorAll('#skuna-contact-form input'));
+
+	var form = document.querySelector('#skuna-contact-form');
+	var inputs = [].slice.call(form.querySelectorAll('input'));
+	var errors = [].slice.call(form.querySelectorAll('small'));
+
 	var placeholders = [{
 		type: 'text',
 		large: 'A name so we know who to ask for you when we contact you',
-		small: 'Your name here please'
+		small: 'Your name here please',
+		check: /^[a-zA-Z]{2,30}$/
 	}, {
 		type: 'email',
 		large: 'An email address we can send Skuna details to',
-		small: 'Your email here please'
+		small: 'Your email here please',
+		check: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 	}, {
 		type: 'number',
 		large: 'A contact number we can call you on',
-		small: 'Your number here please'
+		small: 'Your number here please',
+		check: /^[\d\s]{10,12}$/
 	}];
 
 	function replacePlaceholders(mobile) {
@@ -103,6 +110,34 @@
 
 	document.addEventListener('DOMContentLoaded', function () {
 		replacePlaceholders(isMobile);
+	});
+
+	function getError(type) {
+		return errors.filter(function (error) {
+			return error.getAttribute('data-type') === type;
+		})[0];
+	}
+
+	form.addEventListener('submit', function (e) {
+		e.preventDefault();
+		var isInvalid = true;
+		inputs.forEach(function (input, index) {
+			var check = placeholders.filter(function (ph) {
+				return input.type === ph.type;
+			})[0]['check'];
+			var error = getError(input.type);
+			if (!check.test(input.value)) {
+				isInvalid = false;
+				error.className = error.className += ' show';
+			} else {
+				error.className = error.className.replace(/\s?show/g, '');
+			}
+		});
+		if (isInvalid) {
+			alert('sorry invalid');
+		} else {
+			alert('form is valid!');
+		}
 	});
 
 /***/ }

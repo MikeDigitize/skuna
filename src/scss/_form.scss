@@ -27,11 +27,14 @@
 			margin-top: 20px;
 		}
 		@include placeholder();
+		input {
+			font-size: 1.2rem;
+		}
 		button[type="submit"] {
 			font-size: 1.5rem;
 		    display: block;
 		    margin: 20px auto;
-		    background-color: #8098ab;
+		    background-color: #37b0e3;
 		    border: none;
 		    white-space: normal;
 		    opacity: 0.9;
@@ -39,6 +42,14 @@
 		    &:hover {
 		    	opacity: 1;
 		    }
+		}
+		small {
+			font-weight: bold;
+			color: red;
+			font-size: 1.2rem;
+			margin-top: 10px;
+			line-height: 1rem;
+			display: none;
 		}
 	}
 }
