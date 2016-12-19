@@ -21,7 +21,7 @@ let errors = [].slice.call(form.querySelectorAll('small'));
 
 let placeholders = [{
 	type : 'text',
-	large : 'A name so we know who to ask for you when we contact you',
+	large : 'A name so we know who to ask for when we contact you',
 	small : 'Your name here please',
 	check : /^[a-zA-Z]{2,30}$/
 }, {
@@ -66,24 +66,52 @@ function getError(type) {
 	return errors.filter(error => error.getAttribute('data-type') === type)[0];
 }
 
+function submitForm(inputs) {
+	
+	let data = JSON.stringify(inputs);
+    let xhr = new XMLHttpRequest();
+    let submit = document.querySelector('#form-submit');
+
+    xhr.open('POST', 'contact.php');
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.send(data);
+    xhr.onreadystatechange = function() {
+        if (xhr.status === 200) {
+            submit.setAttribute('disabled', 'disabled');
+            console.log('thanks we\'ll be in touch asap!', xhr.responseText)
+        }
+    };
+
+}
+
 form.addEventListener('submit', function(e) {
+
 	e.preventDefault();
-	let isInvalid = true;
+	let isValid = true;
+	let inValid = [];
+
 	inputs.forEach((input, index) => {
-		let check = placeholders.filter(ph => input.type === ph.type)[0]['check'];
-		let error = getError(input.type);
-		if(!check.test(input.value)) {
-			isInvalid = false;
-			error.className = error.className += ' show';
+		let { type, value } = input;
+		let check = placeholders.filter(ph => type === ph.type)[0]['check'];
+		let error = getError(type);
+		if(!check.test(value)) {
+			isValid = false;
+			error.className = error.className += ' show';7
+			inValid.push(type);
 		}
 		else {
-			error.className = error.className.replace(/\s?show/g, '');		
+			error.className = error.className.replace(/\s?show/g, '');	
+			inValid.splice(inValid.indexOf(type), 1);	
 		}
 	});
-	if(isInvalid) {
-		alert('sorry invalid');
+
+	if(isValid) {
+		let formData = inputs.reduce((data, input) => {
+			let { value, type } = input;
+			data[type] = value;  
+			return data;
+		}, {})
+		submitForm(formData);
 	}
-	else {
-		alert('form is valid!');
-	}
+
 });

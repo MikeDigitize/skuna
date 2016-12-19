@@ -70,7 +70,7 @@
 
 	var placeholders = [{
 		type: 'text',
-		large: 'A name so we know who to ask for you when we contact you',
+		large: 'A name so we know who to ask for when we contact you',
 		small: 'Your name here please',
 		check: /^[a-zA-Z]{2,30}$/
 	}, {
@@ -118,25 +118,56 @@
 		})[0];
 	}
 
+	function submitForm(inputs) {
+
+		var data = JSON.stringify(inputs);
+		var xhr = new XMLHttpRequest();
+		var submit = document.querySelector('#form-submit');
+
+		xhr.open('POST', 'contact.php');
+		xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+		xhr.send(data);
+		xhr.onreadystatechange = function () {
+			if (xhr.status === 200) {
+				submit.setAttribute('disabled', 'disabled');
+				console.log('thanks we\'ll be in touch asap!', xhr.responseText);
+			}
+		};
+	}
+
 	form.addEventListener('submit', function (e) {
+
 		e.preventDefault();
-		var isInvalid = true;
+		var isValid = true;
+		var inValid = [];
+
 		inputs.forEach(function (input, index) {
+			var type = input.type;
+			var value = input.value;
+
 			var check = placeholders.filter(function (ph) {
-				return input.type === ph.type;
+				return type === ph.type;
 			})[0]['check'];
-			var error = getError(input.type);
-			if (!check.test(input.value)) {
-				isInvalid = false;
-				error.className = error.className += ' show';
+			var error = getError(type);
+			if (!check.test(value)) {
+				isValid = false;
+				error.className = error.className += ' show';7;
+				inValid.push(type);
 			} else {
 				error.className = error.className.replace(/\s?show/g, '');
+				inValid.splice(inValid.indexOf(type), 1);
 			}
 		});
-		if (isInvalid) {
-			alert('sorry invalid');
-		} else {
-			alert('form is valid!');
+
+		if (isValid) {
+			var formData = inputs.reduce(function (data, input) {
+				var value = input.value;
+				var type = input.type;
+
+				data[type] = value;
+				return data;
+			}, {});
+			submitForm(formData);
 		}
 	});
 
