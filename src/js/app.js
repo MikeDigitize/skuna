@@ -82,9 +82,11 @@ function submitForm(inputs) {
             let thankYou = document.createElement('h2');
             thankYou.textContent = 'Thanks for enquiring about Skuna! We\'ll be back in touch within 24-48 hours!';
             formHolder.appendChild(thankYou);
+            formError.className += ' hide';
         }
         else if(xhr.status !== 200 && xhr.readyState === 4) {
         	formError.style.display = 'block';
+        	formError.className = formError.className.replace(/\s?hide/g, '');
         }
     };
 
