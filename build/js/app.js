@@ -72,7 +72,7 @@
 		type: 'text',
 		large: 'A name so we know who to ask for when we contact you',
 		small: 'Your name here please',
-		check: /^[a-zA-Z]{2,30}$/
+		check: /^[a-zA-Z\s+]{2,30}$/
 	}, {
 		type: 'email',
 		large: 'An email address we can send Skuna details to',
@@ -122,15 +122,20 @@
 
 		var data = JSON.stringify(inputs);
 		var xhr = new XMLHttpRequest();
-		var submit = document.querySelector('#form-submit');
+		var formError = form.querySelector('.form-error');
 
 		xhr.open('POST', 'contact.php');
 		xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 		xhr.send(data);
 		xhr.onreadystatechange = function () {
-			if (xhr.status === 200) {
-				submit.setAttribute('disabled', 'disabled');
-				console.log('thanks we\'ll be in touch asap!', xhr.responseText);
+			if (xhr.status === 200 && xhr.readyState === 4) {
+				form.innerHTML = '';
+				var thankYou = document.createElement('h2');
+				thankYou.textContent = 'Thanks for enquiring about Skuna! We\'ll be back in touch within 24-48 hours!';
+				form.appendChild(thankYou);
+			} else if (xhr.status !== 200 && xhr.readyState === 4) {
+				console.log(xhr, xhr.readyState);
+				formError.style.display = 'block';
 			}
 		};
 	}
@@ -162,8 +167,8 @@
 		if (isValid) {
 			var formData = inputs.reduce(function (data, input) {
 				var value = input.value;
-				var type = input.type;
 
+				var type = input.getAttribute('data-desc');
 				data[type] = value;
 				return data;
 			}, {});
