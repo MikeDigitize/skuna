@@ -15,15 +15,16 @@ let debounce = function(func, wait, immediate) {
 
 let isMobile = window.innerWidth < 650;
 
-let form = document.querySelector('#skuna-contact-form');
+let formHolder = document.querySelector('.form');
+let form = formHolder.querySelector('#skuna-contact-form');
 let inputs = [].slice.call(form.querySelectorAll('input'));
 let errors = [].slice.call(form.querySelectorAll('small'));
 
 let placeholders = [{
-	type : 'text',
+	type : 'name',
 	large : 'A name so we know who to ask for when we contact you',
 	small : 'Your name here please',
-	check : /^[a-zA-Z\s+]{2,30}$/
+	check : /^[a-zA-Z\s?]{2,30}$/
 }, {
 	type : 'email',
 	large : 'An email address we can send Skuna details to',
@@ -38,7 +39,7 @@ let placeholders = [{
 
 function replacePlaceholders(mobile) {
 	inputs.forEach(input => {
-		let text = placeholders.filter(ph => input.type === ph.type)[0][mobile ? 'small' : 'large'];
+		let text = placeholders.filter(ph => input.getAttribute('data-desc') === ph.type)[0][mobile ? 'small' : 'large'];
 		input.placeholder = text;
 	});
 }
@@ -77,13 +78,12 @@ function submitForm(inputs) {
     xhr.send(data);
     xhr.onreadystatechange = function() {
         if (xhr.status === 200 && xhr.readyState === 4) {
-            form.innerHTML = '';
+            formHolder.innerHTML = '';
             let thankYou = document.createElement('h2');
             thankYou.textContent = 'Thanks for enquiring about Skuna! We\'ll be back in touch within 24-48 hours!';
-            form.appendChild(thankYou);
+            formHolder.appendChild(thankYou);
         }
         else if(xhr.status !== 200 && xhr.readyState === 4) {
-        	console.log(xhr, xhr.readyState);
         	formError.style.display = 'block';
         }
     };
@@ -97,12 +97,13 @@ form.addEventListener('submit', function(e) {
 	let inValid = [];
 
 	inputs.forEach((input, index) => {
-		let { type, value } = input;
+		let { value } = input;
+		let type = input.getAttribute('data-desc');
 		let check = placeholders.filter(ph => type === ph.type)[0]['check'];
 		let error = getError(type);
 		if(!check.test(value)) {
 			isValid = false;
-			error.className = error.className += ' show';7
+			error.className = error.className += ' show';
 			inValid.push(type);
 		}
 		else {
@@ -117,7 +118,7 @@ form.addEventListener('submit', function(e) {
 			let type = input.getAttribute('data-desc');
 			data[type] = value;  
 			return data;
-		}, {})
+		}, {});
 		submitForm(formData);
 	}
 

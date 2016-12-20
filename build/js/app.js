@@ -64,15 +64,16 @@
 
 	var isMobile = window.innerWidth < 650;
 
-	var form = document.querySelector('#skuna-contact-form');
+	var formHolder = document.querySelector('.form');
+	var form = formHolder.querySelector('#skuna-contact-form');
 	var inputs = [].slice.call(form.querySelectorAll('input'));
 	var errors = [].slice.call(form.querySelectorAll('small'));
 
 	var placeholders = [{
-		type: 'text',
+		type: 'name',
 		large: 'A name so we know who to ask for when we contact you',
 		small: 'Your name here please',
-		check: /^[a-zA-Z\s+]{2,30}$/
+		check: /^[a-zA-Z\s?]{2,30}$/
 	}, {
 		type: 'email',
 		large: 'An email address we can send Skuna details to',
@@ -88,7 +89,7 @@
 	function replacePlaceholders(mobile) {
 		inputs.forEach(function (input) {
 			var text = placeholders.filter(function (ph) {
-				return input.type === ph.type;
+				return input.getAttribute('data-desc') === ph.type;
 			})[0][mobile ? 'small' : 'large'];
 			input.placeholder = text;
 		});
@@ -129,12 +130,11 @@
 		xhr.send(data);
 		xhr.onreadystatechange = function () {
 			if (xhr.status === 200 && xhr.readyState === 4) {
-				form.innerHTML = '';
+				formHolder.innerHTML = '';
 				var thankYou = document.createElement('h2');
 				thankYou.textContent = 'Thanks for enquiring about Skuna! We\'ll be back in touch within 24-48 hours!';
-				form.appendChild(thankYou);
+				formHolder.appendChild(thankYou);
 			} else if (xhr.status !== 200 && xhr.readyState === 4) {
-				console.log(xhr, xhr.readyState);
 				formError.style.display = 'block';
 			}
 		};
@@ -147,16 +147,16 @@
 		var inValid = [];
 
 		inputs.forEach(function (input, index) {
-			var type = input.type;
 			var value = input.value;
 
+			var type = input.getAttribute('data-desc');
 			var check = placeholders.filter(function (ph) {
 				return type === ph.type;
 			})[0]['check'];
 			var error = getError(type);
 			if (!check.test(value)) {
 				isValid = false;
-				error.className = error.className += ' show';7;
+				error.className = error.className += ' show';
 				inValid.push(type);
 			} else {
 				error.className = error.className.replace(/\s?show/g, '');
